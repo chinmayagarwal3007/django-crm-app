@@ -1,0 +1,42 @@
+{% extends "base.html" %} {% block content %} {% if user.is_authenticated %}
+<h1>Hello {{user.username|capfirst}}!</h1>
+{% else %}
+
+<div class="col-md-4 offset-md-4 mt-5">
+  <div class="card" style="height: 400px">
+    <div class="card-body">
+      <h1 class="card-title text-center mb-4">Login</h1>
+      <br />
+      <br />
+      <form method="POST" action="{% url 'home' %}">
+        {% csrf_token %}
+
+        <div class="mb-3">
+          <input
+            type="text"
+            class="form-control"
+            name="username"
+            placeholder="Username"
+            required
+          />
+        </div>
+
+        <div class="mb-3">
+          <input
+            type="password"
+            class="form-control"
+            name="password"
+            placeholder="Password"
+            required
+          />
+        </div>
+        <br />
+
+        <button type="submit" class="btn btn-primary w-100 mt-3">Login</button>
+        <!-- Added margin-top for spacing -->
+      </form>
+    </div>
+  </div>
+</div>
+
+{% endif %} {% endblock %}
