@@ -18,6 +18,21 @@
 
     <div class="container">
       <br />
+      {% if messages %} 
+        {% for message in messages %} 
+            {% if message.tags == 'success' %}
+                <div class="alert alert-success alert-dismissible fade show message" role="alert">
+                    {{ message}}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% else %}
+            <div class="alert alert-danger alert-dismissible fade show message" role="alert">
+                {{ message}}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endif %} 
+        {% endfor %} 
+      {% endif %} 
       {% block content %} {% endblock %}
     </div>
 
@@ -26,5 +41,19 @@
       integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
       crossorigin="anonymous"
     ></script>
+
+    <script>
+        // JavaScript to hide alert messages after 2 seconds
+        document.addEventListener('DOMContentLoaded', function () {
+          // Get all messages
+          const messages = document.querySelectorAll('.message');
+          messages.forEach(function (message) {
+            setTimeout(function () {
+              message.classList.remove('show');
+              message.classList.add('fade');
+            }, 1200); // Hide after 2 seconds
+          });
+        });
+      </script>
   </body>
 </html>
