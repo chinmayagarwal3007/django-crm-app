@@ -18,14 +18,16 @@
       </ul>
     
       <div class="d-flex align-items-center">
-        <form class="d-flex" role="search">
+        <form class="d-flex" role="search" method='get' action="{% url 'search' %}">
           <input
             class="form-control me-2"
             type="search"
             placeholder="Search"
             aria-label="Search"
+            name="query" 
+            id="query"
           />
-          <button class="btn btn-outline-success" type="submit">Search</button>
+          <button class="btn btn-outline-light" type="submit">Search</button>
         </form>
     
         {% if user.is_authenticated %}

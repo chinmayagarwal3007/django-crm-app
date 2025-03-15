@@ -21,6 +21,8 @@ def home(request):
         else:
             messages.error(request, "There was an error logging in! Please try again.")
             return redirect('home')
+    if not request.user.is_authenticated:  
+        messages.error(request, "You must be logged in to view records!")
     return render(request, 'home.html', {'records':records})
 
 
@@ -92,3 +94,13 @@ def delete(request, pk):
     else:
         messages.error(request, "You must be logged in as Admin to delete a record!")
         return redirect('home')
+    
+def search(request):
+    if request.user.is_authenticated:
+        query = request.GET["query"]
+        records = Record.objects.filter(first_name=query)
+        return render(request, 'search.html', {"records":records})
+    else:
+        messages.error(request, "You must be logged in to search a record!")
+        return redirect('home')
+        
