@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.contrib.auth import authenticate,login,logout
 from django.contrib import messages
 from django.shortcuts import redirect
-from .forms import UserRegistrationForm
+from .forms import UserRegistrationForm, RecordForm
 from .models import Record
 
 # Create your views here.
@@ -42,6 +42,37 @@ def register(request):
             return redirect('home')        
     return render(request, 'registration/register.html', {'form':form})
 
+def create_record(request):
+    if request.user.is_authenticated:
+        if request.method == "POST":
+            form = RecordForm(request.POST)
+            if form.is_valid():
+                form.save()
+                messages.success(request, "User Created Successfully!")
+                return redirect('home')
+        else:
+            form = RecordForm()
+        return render(request, 'create_record.html', {'form':form})
+    else:
+        messages.error(request, "You must be logged in to create a record!")
+        return redirect('home')
+
+
+def update_record(request, pk):
+    if request.user.is_authenticated:
+        customer = Record.objects.get(id=pk)
+        if request.method == "POST":
+            form = RecordForm(request.POST, instance=customer)
+            form.save()
+            messages.success(request, "User Updated Successfully!")
+            return redirect('home')
+        form = RecordForm(instance=customer)
+        return render(request, 'update_record.html', {'form':form})
+    else:
+        messages.error(request, "You must be logged in to update a record!")
+        return redirect('home')
+
+    
 
 def customer_record(request, pk):
     if request.user.is_authenticated:
