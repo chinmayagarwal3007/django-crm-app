@@ -3,10 +3,12 @@ from django.contrib.auth import authenticate,login,logout
 from django.contrib import messages
 from django.shortcuts import redirect
 from .forms import UserRegistrationForm
+from .models import Record
 
 # Create your views here.
 
 def home(request):
+    records = Record.objects.all()
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
@@ -19,7 +21,7 @@ def home(request):
         else:
             messages.error(request, "There was an error logging in! Please try again.")
             return redirect('home')
-    return render(request, 'home.html')
+    return render(request, 'home.html', {'records':records})
 
 
 def logout_user(request):
@@ -39,3 +41,19 @@ def register(request):
             messages.success(request, "You have registered successfully!")
             return redirect('home')        
     return render(request, 'registration/register.html', {'form':form})
+
+
+def customer_record(request, pk):
+    if request.user.is_authenticated:
+        customer_record = Record.objects.get(id=pk)
+        return render(request, 'record.html',{'customer_record':customer_record})
+    else:
+        messages.error(request, "You must be logged in to view a record!")
+        return redirect('home')
+    
+
+def delete(request, pk):
+    deleted_record = Record.objects.get(id=pk)
+    deleted_record.delete()
+    messages.success(request, "Record was deleted successfullt!")
+    return redirect('home')
