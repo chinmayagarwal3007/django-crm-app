@@ -43,7 +43,7 @@ def register(request):
     return render(request, 'registration/register.html', {'form':form})
 
 def create_record(request):
-    if request.user.is_authenticated:
+    if request.user.is_staff:
         if request.method == "POST":
             form = RecordForm(request.POST)
             if form.is_valid():
@@ -54,12 +54,12 @@ def create_record(request):
             form = RecordForm()
         return render(request, 'create_record.html', {'form':form})
     else:
-        messages.error(request, "You must be logged in to create a record!")
+        messages.error(request, "You must be logged in as Admin to create a record!")
         return redirect('home')
 
 
 def update_record(request, pk):
-    if request.user.is_authenticated:
+    if request.user.is_staff:
         customer = Record.objects.get(id=pk)
         if request.method == "POST":
             form = RecordForm(request.POST, instance=customer)
@@ -69,7 +69,7 @@ def update_record(request, pk):
         form = RecordForm(instance=customer)
         return render(request, 'update_record.html', {'form':form})
     else:
-        messages.error(request, "You must be logged in to update a record!")
+        messages.error(request, "You must be logged in as Admin to update a record!")
         return redirect('home')
 
     
@@ -84,7 +84,11 @@ def customer_record(request, pk):
     
 
 def delete(request, pk):
-    deleted_record = Record.objects.get(id=pk)
-    deleted_record.delete()
-    messages.success(request, "Record was deleted successfullt!")
-    return redirect('home')
+    if request.user.is_staff:
+        deleted_record = Record.objects.get(id=pk)
+        deleted_record.delete()
+        messages.success(request, "Record was deleted successfullt!")
+        return redirect('home')
+    else:
+        messages.error(request, "You must be logged in as Admin to delete a record!")
+        return redirect('home')

@@ -35,7 +35,10 @@
   }
 </style>
 
+{% if user.is_staff %}
 <a  class="btn btn-primary" href="{% url 'create_record' %}">Add Customer</a>
+{% endif %}
+
 {% if records %}
 <table class="table table-bordered table-hover">
   <thead>

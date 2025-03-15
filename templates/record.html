@@ -25,6 +25,7 @@
       </p>
     </div>
     <br>
+    {% if user.is_staff %}
     <div class="d-flex justify-content-between">
         <a href="{%url 'delete' customer_record.id %}" class="btn btn-danger" style="width: 48%;">
           Delete
@@ -33,6 +34,7 @@
             Update
         </a>
     </div>
+    {% endif %}
   </div>
 </div>
 </form>
